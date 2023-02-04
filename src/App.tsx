@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { BiPaperPlane } from 'react-icons/bi'
 import UserAvatar from './assets/user-icon.jpg';
 import CatAvatar from './assets/cat-icon.jpg';
+import MeowSupportAvatar from './assets/meow-support.png'
 import { useAppDispatch, useAppSelector } from './hook/useTypedSelector';
 import { sendMessage } from './hook/meowSlices';
 import './assets/style.css'
@@ -85,7 +86,7 @@ function App() {
                   return (
                     <>
                       <li key={index} className='computer-input'>
-                        <img src={CatAvatar} alt="Cat Avatar" />
+                        <img src={MeowSupportAvatar} alt="Cat Avatar" />
                         <p className="computer-input-text">{<Typewriter sentence={e.message} />}</p>
                       </li>
                     </>
