@@ -111,6 +111,7 @@ function App() {
               type="text"
               name="question"
               ref={inputForm}
+              onKeyUp={(e) => e.key === 'Enter' ? onSubmit(e) : null}
             />
             <button type='button' onClick={onSubmit}>
               <BiPaperPlane
