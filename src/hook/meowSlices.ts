@@ -5,7 +5,12 @@ interface InitialStateObj {
   message: string
 }
 
-let initialState: Array<InitialStateObj> = [];
+let initialState: Array<InitialStateObj> = [
+  {
+    avatar: 'cat',
+    message: 'Meow, meow! Rrrow, it\'s MeowSupport, your furry feline friend here to offer a paw of assistance. Rrrow, how can I help you today? Meow!'
+  }
+];
 
 const meowSlices = createSlice({
   name: 'meow',
