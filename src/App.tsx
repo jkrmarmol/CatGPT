@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, MutableRefObject } from 'react'
 import { BiPaperPlane } from 'react-icons/bi'
 import UserAvatar from './assets/user-icon.jpg';
 import MeowSupportAvatar from './assets/midjourney_cat.webp'
@@ -6,11 +6,12 @@ import { useAppDispatch, useAppSelector } from './hook/useTypedSelector';
 import { sendMessage } from './hook/meowSlices';
 import './assets/style.css'
 
+
 function App() {
   const dispatch = useAppDispatch();
   const selectMeow = useAppSelector(state => state.meow)
-  const inputForm = useRef<string | any>('');
-  const scrollDown = useRef<string | any>('');
+  const inputForm = useRef<HTMLInputElement>(null);
+  const scrollDown = useRef<HTMLDivElement>(null);
 
   const Typewriter = ({ sentence }: { sentence: string }) => {
     const [index, setIndex] = useState(0);
@@ -30,7 +31,7 @@ function App() {
       return () => clearInterval(intervalId);
     }, [index]);
 
-    return <p>{text}</p>;
+    return <span>{text}</span>;
   };
 
   const meowMessages = () => {
@@ -41,23 +42,25 @@ function App() {
     return paragraph;
   }
 
-  const onSubmit = (e: any) => {
+  const onSubmit = (e: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const humanMessage = {
       avatar: 'human',
-      message: inputForm.current.value
+      message: inputForm.current?.value
     };
     const catMessage = {
       avatar: 'cat',
       message: meowMessages()
     };
-    console.log(catMessage)
     dispatch(sendMessage(humanMessage))
     dispatch(sendMessage(catMessage))
   }
 
   useEffect(() => {
-    scrollDown.current.scrollIntoView({ behavior: "smooth" });
+    if (scrollDown.current) {
+      scrollDown.current.scrollIntoView({ behavior: "smooth" });
+    }
+
   })
 
   return (
@@ -72,32 +75,26 @@ function App() {
             {selectMeow.map((e, index) => {
               if (e.avatar === 'human') {
                 return (
-                  <>
-                    <li key={index}>
-                      <img src={UserAvatar} alt='User Avatar' />
-                      <p className='user-input-text'>{e.message}</p>
-                    </li>
-                  </>
+                  <li key={index}>
+                    <img src={UserAvatar} alt='User Avatar' />
+                    <p className='user-input-text'>{e.message}</p>
+                  </li>
                 );
               } else {
                 const lastArray = selectMeow[selectMeow.length - 1];
                 if (lastArray.message === e.message) {
                   return (
-                    <>
-                      <li key={index} className='computer-input'>
-                        <img src={MeowSupportAvatar} alt="Cat Avatar" />
-                        <p className="computer-input-text">{<Typewriter sentence={e.message} />}</p>
-                      </li>
-                    </>
+                    <li className='computer-input' key={index}>
+                      <img src={MeowSupportAvatar} alt="Cat Avatar" />
+                      <p className="computer-input-text">{<Typewriter sentence={e.message} />}</p>
+                    </li>
                   );
                 }
                 return (
-                  <>
-                    <li key={index} className='computer-input'>
-                      <img src={MeowSupportAvatar} alt="Cat Avatar" />
-                      <p className="computer-input-text">{e.message}</p>
-                    </li>
-                  </>
+                  <li key={index} className='computer-input'>
+                    <img src={MeowSupportAvatar} alt="Cat Avatar" />
+                    <p className="computer-input-text">{e.message}</p>
+                  </li>
                 );
               }
             })}
